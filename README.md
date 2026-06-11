@@ -46,10 +46,19 @@ Live use: just open `index.html`, or serve the folder (see below).
   follows `GetCgTextBoxDimensions` / `GetCgTextDimensions` in `src/cgtext.c`
   (`[LF]`/`[NL]` = line break, `[X]` = end, `[0x80, xx]` and other control
   codes = consumed with zero width).
-- **Glyph rendering is faithful but simplified.** Bitmaps are the real
-  2-bits-per-pixel glyph data; the four palette indices (0 = transparent,
-  1–3 = ink shades / anti-aliasing) are flattened to a single ink color. So
-  letter *shapes and widths* match the game; subtle shading does not.
+- **Glyph rendering is faithful and shaded.** Bitmaps are the real
+  2-bits-per-pixel glyph data, drawn through the real dialogue palette:
+  pixel value 0 = transparent, 1 = `#DEDEDE`, 2 = `#BDBDBD`, 3 = `#292929`.
+  These come from `gPal_HelpTextBox` resolved through the colour-`0xb`
+  `gFontgrp_14` look-up table (pixel → palette index 4/13/14/15). The dialogue
+  window frame is the real `Img_TalkBubble` tiles (`0x10..0x13`) recoloured
+  through `Pal_TalkBubble` and 9-sliced (with H/V flips) exactly as
+  `PutTalkBubbleTm` does in `src/scene.c`.
+
+  > **Decomp note:** the event-MSG dialogue path
+  > (`eventscr.c` → `StartCgText` → `src/cgtext.c`) binds **`gPal_HelpTextBox`**,
+  > *not* `Pal_TalkText` (which an earlier assumption used). `Pal_TalkText`
+  > belongs to the separate `src/scene.c` talk-bubble path at colour `0`.
 
 ## Running
 
@@ -66,18 +75,29 @@ python3 -m http.server
 
 ## How the data was extracted
 
-`extract.py` parses the decomp's font headers and control-code definitions and
-writes two JSON files into `data/`:
+`extract.py` parses the decomp's font headers, palettes, control-code
+definitions and the dialogue-window graphics, and writes these files into
+`data/`:
 
 | File | Contents | Source in fireemblem8u |
 | --- | --- | --- |
-| `data/glyph-widths.json` | `{ talk, system, special }` → char code (0–255) → `{ width, bitmap[16] }` | `src/data/fonts/glyphs_{1,2,3}.h` (`struct Glyph` defs + `TextGlyphs_*[]` pointer tables) |
+| `data/glyphs-talk.json` | char code (0–255) → `{ width, bitmap[16] }` (dialogue font) | `src/data/fonts/glyphs_2.h` (`TextGlyphs_Talk`) |
+| `data/glyphs-system.json` | char code (0–255) → `{ width, bitmap[16] }` (system font) | `src/data/fonts/glyphs_1.h` (`TextGlyphs_System`) |
+| `data/glyph-widths.json` | `{ talk, system }` bundle (compatibility) | as above |
+| `data/palette.json` | resolved 4-colour dialogue palette (idx0 transparent) | `gPal_HelpTextBox` @ `0xb` via `gFontgrp_14` (`src/data/ui/ui_palettes.s`, `color_lookup_tables.h`) |
+| `data/window.png` + `data/window.json` | the real dialogue window frame tiles + box geometry | `graphics/misc/Img_TalkBubble.png` + `Pal_TalkBubble`, `src/cgtext.c`/`src/scene.c` |
 | `data/control-codes.json` | control-code name → `{ bytes, layout }` | `texts/textdefs.txt` |
 
-The pointer tables (`TextGlyphs_Talk`, `TextGlyphs_System`, `TextGlyphs_Special`)
-are walked so that **array index == character code**, matching the ASCII path
-(`glyphs[byte]`). NULL entries fall back to the `?` glyph exactly like the game.
-The dialogue font is `talk`.
+The pointer tables (`TextGlyphs_Talk`, `TextGlyphs_System`) are walked so that
+**array index == character code**, matching the ASCII path (`glyphs[byte]`).
+NULL entries fall back to the `?` glyph exactly like the game. The dialogue font
+is `talk`.
+
+Run it against a local decomp checkout (default `/home/laqieer/fireemblem8u`):
+
+```sh
+python3 extract.py --decomp /path/to/fireemblem8u
+```
 
 Regenerate (requires a local checkout of the decomp):
 

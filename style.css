@@ -172,11 +172,21 @@ code {
 
 .box-frame {
   display: inline-block;
-  background: var(--box-bg);
-  border: 3px solid var(--box-edge);
-  border-radius: 6px;
+  /* The canvas now draws the real FE8 dialogue window frame, so the wrapper is
+     just a neutral GBA-screen backdrop. */
+  background: #000;
+  border-radius: 4px;
   padding: 8px;
   line-height: 0;
+}
+
+#fontGroup {
+  background: #15131f;
+  color: var(--ink);
+  border: 1px solid #3a3550;
+  border-radius: 6px;
+  padding: 0.4rem;
+  font-size: 0.95rem;
 }
 
 canvas {

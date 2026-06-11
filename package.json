@@ -1,0 +1,17 @@
+{
+  "name": "textbox-simulator-fe8",
+  "version": "1.0.0",
+  "description": "FE8 (The Sacred Stones) dialogue textbox simulator — a no-build static site rendering real decomp-extracted glyphs, palette, and window frame.",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node test.mjs",
+    "screenshot": "node tools/screenshot.mjs",
+    "screenshot:browser": "node tools/screenshot-browser.mjs"
+  },
+  "optionalDependencies": {
+    "@napi-rs/canvas": "^0.1.0",
+    "playwright": "^1.60.0"
+  }
+}

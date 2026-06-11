@@ -1,0 +1,17 @@
+{
+  "colors": [
+    null,
+    "#DEDEDE",
+    "#BDBDBD",
+    "#292929"
+  ],
+  "source": "gPal_HelpTextBox",
+  "colorId": "0xb",
+  "lut": "gFontgrp_14",
+  "lut_pixel_to_palidx": {
+    "0": 4,
+    "1": 13,
+    "2": 14,
+    "3": 15
+  }
+}

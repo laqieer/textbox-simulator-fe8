@@ -1,0 +1,38 @@
+{
+  "boxX": 24,
+  "boxY": 144,
+  "innerW": 160,
+  "innerH": 64,
+  "lines": 4,
+  "lineHeight": 16,
+  "textInsetX": 4,
+  "textInsetY": 0,
+  "tile": 8,
+  "screenW": 240,
+  "screenH": 160,
+  "frame": {
+    "slots": [
+      "corner",
+      "top",
+      "left",
+      "fill"
+    ],
+    "corner": {
+      "slot": 0,
+      "flips": "TL as-is; TR=Hflip; BL=Vflip; BR=HVflip"
+    },
+    "top": {
+      "slot": 1,
+      "note": "bottom edge = Vflip"
+    },
+    "left": {
+      "slot": 2,
+      "note": "right edge = Hflip"
+    },
+    "fill": {
+      "slot": 3
+    }
+  },
+  "palette": "Pal_TalkBubble (palette 3)",
+  "tiles_source": "graphics/misc/Img_TalkBubble.png 0x10..0x13"
+}
