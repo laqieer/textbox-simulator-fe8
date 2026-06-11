@@ -1,5 +1,7 @@
 # FE8 Textbox Simulator
 
+[![CI](https://github.com/laqieer/textbox-simulator-fe8/actions/workflows/ci.yml/badge.svg)](https://github.com/laqieer/textbox-simulator-fe8/actions/workflows/ci.yml)
+
 A tiny static web app that previews how **Fire Emblem: The Sacred Stones (FE8)**
 dialogue text wraps inside the textbox — without rebuilding the ROM. Glyph
 advance widths are pixel-exact, pulled straight from the
@@ -9,6 +11,15 @@ This is an FE8 port of [meejle's](https://github.com/meejle/meejle.github.io)
 pokeemerald Textbox Simulator — same idea, FE8 font metrics and control codes.
 
 Live use: just open `index.html`, or serve the folder (see below).
+
+## CI / Hosted
+
+- **CI:** every push and pull request to `master` runs `node test.mjs` via the
+  [CI workflow](.github/workflows/ci.yml) (see the badge above).
+- **Hosted:** the app is a no-build static site deployed to **GitHub Pages**
+  straight from the repo root by the [Pages workflow](.github/workflows/pages.yml)
+  on every push to `master`. (The repo's Pages source must be set to
+  "GitHub Actions" in **Settings → Pages**.)
 
 ## What it does
 
