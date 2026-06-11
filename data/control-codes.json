@@ -1,0 +1,1204 @@
+{
+  ".": {
+    "bytes": [
+      31
+    ],
+    "layout": "control"
+  },
+  "....": {
+    "bytes": [
+      4
+    ],
+    "layout": "control"
+  },
+  ".....": {
+    "bytes": [
+      5
+    ],
+    "layout": "control"
+  },
+  "......": {
+    "bytes": [
+      6
+    ],
+    "layout": "control"
+  },
+  ".......": {
+    "bytes": [
+      7
+    ],
+    "layout": "control"
+  },
+  "A": {
+    "bytes": [
+      3
+    ],
+    "layout": "control"
+  },
+  "AccentedE": {
+    "bytes": [
+      233
+    ],
+    "layout": "control"
+  },
+  "BreakTalk": {
+    "bytes": [
+      128,
+      4
+    ],
+    "layout": "control"
+  },
+  "BuySell": {
+    "bytes": [
+      26
+    ],
+    "layout": "control"
+  },
+  "CR": {
+    "bytes": [
+      2
+    ],
+    "layout": "newline2"
+  },
+  "ClearFace": {
+    "bytes": [
+      17
+    ],
+    "layout": "control"
+  },
+  "CloseEyes": {
+    "bytes": [
+      128,
+      29
+    ],
+    "layout": "control"
+  },
+  "CloseSpeechFast": {
+    "bytes": [
+      20
+    ],
+    "layout": "control"
+  },
+  "CloseSpeechSlow": {
+    "bytes": [
+      21
+    ],
+    "layout": "control"
+  },
+  "DashedLine": {
+    "bytes": [
+      127
+    ],
+    "layout": "control"
+  },
+  "DelayBlinking": {
+    "bytes": [
+      128,
+      24
+    ],
+    "layout": "control"
+  },
+  "DisableBlinking": {
+    "bytes": [
+      128,
+      27
+    ],
+    "layout": "control"
+  },
+  "EnableBlinking": {
+    "bytes": [
+      128,
+      22
+    ],
+    "layout": "control"
+  },
+  "FID_Active": {
+    "bytes": [
+      255,
+      255
+    ],
+    "layout": "control"
+  },
+  "FID_Aias": {
+    "bytes": [
+      59,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Amelia": {
+    "bytes": [
+      25,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Anna": {
+    "bytes": [
+      100,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_AnotherSoldier": {
+    "bytes": [
+      113,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Arena": {
+    "bytes": [
+      103,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Armoury": {
+    "bytes": [
+      101,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Artur": {
+    "bytes": [
+      26,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Bandit": {
+    "bytes": [
+      76,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Bazba": {
+    "bytes": [
+      51,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Beran": {
+    "bytes": [
+      62,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Binks": {
+    "bytes": [
+      57,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Bone": {
+    "bytes": [
+      50,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Breguet": {
+    "bytes": [
+      49,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Caellach": {
+    "bytes": [
+      67,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Carlyle": {
+    "bytes": [
+      60,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Colm": {
+    "bytes": [
+      12,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_ColmEyeClosed": {
+    "bytes": [
+      13,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Cormag": {
+    "bytes": [
+      19,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Dozla": {
+    "bytes": [
+      35,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Duessel": {
+    "bytes": [
+      37,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Eirika": {
+    "bytes": [
+      2,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_EirikaEyeClosed": {
+    "bytes": [
+      3,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_EirikaFlashback": {
+    "bytes": [
+      45,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Ephraim": {
+    "bytes": [
+      20,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_EphraimEyeClosed": {
+    "bytes": [
+      21,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_EphraimFlashback": {
+    "bytes": [
+      46,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Ewan": {
+    "bytes": [
+      33,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Fado": {
+    "bytes": [
+      81,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Forde": {
+    "bytes": [
+      22,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_FordeEyeClosed": {
+    "bytes": [
+      23,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Franz": {
+    "bytes": [
+      6,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_FreliaKnight": {
+    "bytes": [
+      105,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Garcia": {
+    "bytes": [
+      14,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Gerik": {
+    "bytes": [
+      27,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Gheb": {
+    "bytes": [
+      61,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Gilliam": {
+    "bytes": [
+      5,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Glen": {
+    "bytes": [
+      75,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Hayden": {
+    "bytes": [
+      82,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Innes": {
+    "bytes": [
+      15,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Ismaire": {
+    "bytes": [
+      86,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_IsmaireEyeClosed": {
+    "bytes": [
+      87,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Joshua": {
+    "bytes": [
+      42,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Klimt": {
+    "bytes": [
+      84,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Knoll": {
+    "bytes": [
+      41,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_KnollFlashback": {
+    "bytes": [
+      47,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Kyle": {
+    "bytes": [
+      24,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_LArachel": {
+    "bytes": [
+      34,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Lute": {
+    "bytes": [
+      16,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Lyon": {
+    "bytes": [
+      70,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_LyonEvil": {
+    "bytes": [
+      74,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_LyonEyeClosed": {
+    "bytes": [
+      71,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_LyonFlashback": {
+    "bytes": [
+      80,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_ManUnused": {
+    "bytes": [
+      77,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Mansel": {
+    "bytes": [
+      83,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Marisa": {
+    "bytes": [
+      30,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_MarisaEyeClosed": {
+    "bytes": [
+      31,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Morva": {
+    "bytes": [
+      73,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Moulder": {
+    "bytes": [
+      7,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Murray": {
+    "bytes": [
+      55,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Myrrh": {
+    "bytes": [
+      38,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_MyrrhEyeClosed": {
+    "bytes": [
+      39,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_MyrrhWithWing": {
+    "bytes": [
+      40,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Mystery": {
+    "bytes": [
+      1,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Natasha": {
+    "bytes": [
+      17,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_NatashaEyeClosed": {
+    "bytes": [
+      18,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Neimi": {
+    "bytes": [
+      10,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_NeimiEyeClosed": {
+    "bytes": [
+      11,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Novala": {
+    "bytes": [
+      54,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_NovalaClone": {
+    "bytes": [
+      110,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_ONeill": {
+    "bytes": [
+      48,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_ONeillClone": {
+    "bytes": [
+      108,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_ONeillClone2": {
+    "bytes": [
+      109,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Orson": {
+    "bytes": [
+      69,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_OrsonDrugged": {
+    "bytes": [
+      68,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Pablo": {
+    "bytes": [
+      58,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_PurpleSoldier": {
+    "bytes": [
+      112,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_RaustenSoldier": {
+    "bytes": [
+      111,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Rennac": {
+    "bytes": [
+      36,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Riev": {
+    "bytes": [
+      72,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Ross": {
+    "bytes": [
+      9,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Saar": {
+    "bytes": [
+      52,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Saleh": {
+    "bytes": [
+      32,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_SalehGrandma": {
+    "bytes": [
+      85,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_SecretShop": {
+    "bytes": [
+      104,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Selena": {
+    "bytes": [
+      63,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Seth": {
+    "bytes": [
+      4,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Soldier1": {
+    "bytes": [
+      106,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Soldier2": {
+    "bytes": [
+      107,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Syrene": {
+    "bytes": [
+      43,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Tana": {
+    "bytes": [
+      44,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Tethys": {
+    "bytes": [
+      28,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_TethysEyeClosed": {
+    "bytes": [
+      29,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Tirado": {
+    "bytes": [
+      56,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Valter": {
+    "bytes": [
+      66,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Vanessa": {
+    "bytes": [
+      8,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Vendor": {
+    "bytes": [
+      102,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Vigarde": {
+    "bytes": [
+      64,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_VigardeFlashback": {
+    "bytes": [
+      78,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_VigardeFlashbackEyeClosed": {
+    "bytes": [
+      79,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_VigardeHealthy": {
+    "bytes": [
+      65,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_VillagerGirlBlackHair": {
+    "bytes": [
+      98,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_VillagerGirlBrownHair": {
+    "bytes": [
+      97,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_VillagerGirlYoung": {
+    "bytes": [
+      99,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_VillagerMan1": {
+    "bytes": [
+      88,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_VillagerMan2": {
+    "bytes": [
+      90,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_VillagerMan3": {
+    "bytes": [
+      91,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_VillagerMan4": {
+    "bytes": [
+      92,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_VillagerOldMan": {
+    "bytes": [
+      89,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_VillagerOldWoman": {
+    "bytes": [
+      95,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_VillagerWoman": {
+    "bytes": [
+      96,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_VillagerYoungBoy": {
+    "bytes": [
+      94,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_VillagerYoungMan": {
+    "bytes": [
+      93,
+      1
+    ],
+    "layout": "control"
+  },
+  "FID_Zonta": {
+    "bytes": [
+      53,
+      1
+    ],
+    "layout": "control"
+  },
+  "FastPrint": {
+    "bytes": [
+      29
+    ],
+    "layout": "control"
+  },
+  "G": {
+    "bytes": [
+      128,
+      5
+    ],
+    "layout": "control"
+  },
+  "HASH": {
+    "bytes": [
+      35
+    ],
+    "layout": "control"
+  },
+  "HalfCloseEyes": {
+    "bytes": [
+      128,
+      30
+    ],
+    "layout": "control"
+  },
+  "Item": {
+    "bytes": [
+      128,
+      34
+    ],
+    "layout": "control"
+  },
+  "LF": {
+    "bytes": [
+      1
+    ],
+    "layout": "newline"
+  },
+  "LQuote": {
+    "bytes": [
+      147
+    ],
+    "layout": "control"
+  },
+  "LoadFace": {
+    "bytes": [
+      16
+    ],
+    "layout": "control"
+  },
+  "LoadOverworldFaces": {
+    "bytes": [
+      128,
+      4
+    ],
+    "layout": "control"
+  },
+  "MoveFarFarLeft": {
+    "bytes": [
+      128,
+      16
+    ],
+    "layout": "control"
+  },
+  "MoveFarFarRight": {
+    "bytes": [
+      128,
+      17
+    ],
+    "layout": "control"
+  },
+  "MoveFarLeft": {
+    "bytes": [
+      128,
+      10
+    ],
+    "layout": "control"
+  },
+  "MoveFarRight": {
+    "bytes": [
+      128,
+      15
+    ],
+    "layout": "control"
+  },
+  "MoveLeft": {
+    "bytes": [
+      128,
+      12
+    ],
+    "layout": "control"
+  },
+  "MoveMidLeft": {
+    "bytes": [
+      128,
+      11
+    ],
+    "layout": "control"
+  },
+  "MoveMidRight": {
+    "bytes": [
+      128,
+      14
+    ],
+    "layout": "control"
+  },
+  "MoveRight": {
+    "bytes": [
+      128,
+      13
+    ],
+    "layout": "control"
+  },
+  "NL": {
+    "bytes": [
+      1
+    ],
+    "layout": "newline"
+  },
+  "NL2": {
+    "bytes": [
+      2
+    ],
+    "layout": "newline2"
+  },
+  "No": {
+    "bytes": [
+      25
+    ],
+    "layout": "control"
+  },
+  "NormalPrint": {
+    "bytes": [
+      18
+    ],
+    "layout": "control"
+  },
+  "OpenEyes": {
+    "bytes": [
+      128,
+      28
+    ],
+    "layout": "control"
+  },
+  "OpenFarFarLeft": {
+    "bytes": [
+      14
+    ],
+    "layout": "control"
+  },
+  "OpenFarFarRight": {
+    "bytes": [
+      15
+    ],
+    "layout": "control"
+  },
+  "OpenFarLeft": {
+    "bytes": [
+      8
+    ],
+    "layout": "control"
+  },
+  "OpenFarRight": {
+    "bytes": [
+      13
+    ],
+    "layout": "control"
+  },
+  "OpenLeft": {
+    "bytes": [
+      10
+    ],
+    "layout": "control"
+  },
+  "OpenMidLeft": {
+    "bytes": [
+      9
+    ],
+    "layout": "control"
+  },
+  "OpenMidRight": {
+    "bytes": [
+      12
+    ],
+    "layout": "control"
+  },
+  "OpenRight": {
+    "bytes": [
+      11
+    ],
+    "layout": "control"
+  },
+  "PauseBlinking": {
+    "bytes": [
+      128,
+      25
+    ],
+    "layout": "control"
+  },
+  "RQuote": {
+    "bytes": [
+      148
+    ],
+    "layout": "control"
+  },
+  "SendToBack": {
+    "bytes": [
+      28
+    ],
+    "layout": "control"
+  },
+  "SetName": {
+    "bytes": [
+      128,
+      35
+    ],
+    "layout": "control"
+  },
+  "ShopContinue": {
+    "bytes": [
+      27
+    ],
+    "layout": "control"
+  },
+  "TAB": {
+    "bytes": [
+      129,
+      64
+    ],
+    "layout": "control"
+  },
+  "Tact": {
+    "bytes": [
+      128,
+      32
+    ],
+    "layout": "control"
+  },
+  "ToggleColorInvert": {
+    "bytes": [
+      128,
+      37
+    ],
+    "layout": "control"
+  },
+  "ToggleMouthMove": {
+    "bytes": [
+      22
+    ],
+    "layout": "control"
+  },
+  "ToggleRed": {
+    "bytes": [
+      128,
+      33
+    ],
+    "layout": "control"
+  },
+  "ToggleSmile": {
+    "bytes": [
+      23
+    ],
+    "layout": "control"
+  },
+  "Unknown8017": {
+    "bytes": [
+      128,
+      23
+    ],
+    "layout": "control"
+  },
+  "Wink": {
+    "bytes": [
+      128,
+      31
+    ],
+    "layout": "control"
+  },
+  "X": {
+    "bytes": [
+      0
+    ],
+    "layout": "end"
+  },
+  "Yes": {
+    "bytes": [
+      24
+    ],
+    "layout": "control"
+  }
+}

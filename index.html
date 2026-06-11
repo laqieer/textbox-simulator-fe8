@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FE8 Textbox Simulator</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>FE8 Textbox Simulator</h1>
+      <p class="sub">
+        Preview how Fire Emblem: The Sacred Stones dialogue text wraps in the
+        textbox &mdash; pixel-exact widths straight from the
+        <a href="https://github.com/FireEmblemUniverse/fireemblem8u">fireemblem8u</a>
+        decomp. A port of
+        <a href="https://github.com/meejle/meejle.github.io">meejle&rsquo;s</a>
+        pokeemerald Textbox Simulator.
+      </p>
+    </header>
+
+    <main>
+      <section class="controls">
+        <label class="field">
+          <span>FE8 dialogue text (supports <code>[..]</code> control codes)</span>
+          <textarea id="text" rows="6" spellcheck="false">For first-timers.[.][LF]Game rules and[LF]controls will be[LF]explained as you[LF]play.[.][X]</textarea>
+        </label>
+
+        <div class="row">
+          <label class="field small">
+            <span>Box width (tiles)</span>
+            <input id="boxWidthTiles" type="number" min="1" max="30" value="20" />
+          </label>
+          <label class="field small">
+            <span>Box width (px)</span>
+            <output id="boxWidthPx">160</output>
+          </label>
+          <label class="field small">
+            <span>Lines (height)</span>
+            <input id="boxHeight" type="number" min="1" max="8" value="4" />
+          </label>
+          <label class="field small">
+            <span>Zoom</span>
+            <input id="zoom" type="number" min="1" max="8" value="3" />
+          </label>
+        </div>
+
+        <div class="row toggles">
+          <label class="check">
+            <input id="autoWrap" type="checkbox" />
+            <span>Auto-wrap at box width (preview only &mdash; FE8 scripts are hand-wrapped with <code>[LF]</code>)</span>
+          </label>
+          <label class="check">
+            <input id="showGuides" type="checkbox" checked />
+            <span>Show box / line guides</span>
+          </label>
+        </div>
+
+        <div class="quickcodes" id="quickcodes">
+          <span>Insert:</span>
+          <button type="button" data-code="[LF]">[LF] line break</button>
+          <button type="button" data-code="[CR]">[CR] page break</button>
+          <button type="button" data-code="[X]">[X] end</button>
+          <button type="button" data-code="[A]">[A] wait</button>
+          <button type="button" data-code="[.]">[.] pause</button>
+        </div>
+      </section>
+
+      <section class="preview">
+        <h2>Preview</h2>
+        <div id="boxFrame" class="box-frame">
+          <canvas id="canvas"></canvas>
+        </div>
+        <p class="stats" id="stats"></p>
+        <p class="note">
+          Glyphs are rendered from the real FE8 16&times;16 2bpp bitmaps; advance
+          widths are exact. Anti-aliasing shades are flattened to a single ink
+          color.
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <p id="status">Loading font data&hellip;</p>
+    </footer>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
