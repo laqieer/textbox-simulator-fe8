@@ -202,7 +202,8 @@ console.log('Test 7: geometry constants match cgtext.c / eventscr.c');
   assert(windowMeta.boxX === 24, `boxX = 24 (3 tiles)`);
   assert(windowMeta.boxY === 144, `boxY = 144 (18 tiles)`);
   assert(windowMeta.innerW === 160, `innerW = 160 (20 tiles)`);
-  assert(windowMeta.innerH === 64, `innerH = 64 (4 lines x 16)`);
+  assert(windowMeta.innerH === 32, `innerH = 32 (2 lines x 16; boxHeight 4 tiles / 2)`);
+  assert(windowMeta.lines === 2, `lines = 2 (StartCgText height 4 tiles -> boxHeight/2 lines)`);
   assert(windowMeta.lineHeight === 16, `lineHeight = 16`);
   assert(FE8Wrap.LINE_HEIGHT === 16, `wrap.js LINE_HEIGHT = 16`);
 }

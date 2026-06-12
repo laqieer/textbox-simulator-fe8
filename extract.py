@@ -234,8 +234,8 @@ def extract_window(root, out_dir):
         "boxX": 24,            # x=3 tiles * 8
         "boxY": 144,           # y=0x12 (18) tiles * 8
         "innerW": 160,         # width=0x14 (20) tiles * 8
-        "innerH": 64,          # 4 lines * 16px
-        "lines": 4,
+        "innerH": 32,          # boxHeight 4 tiles (32px) = 2 lines * 16px
+        "lines": 2,
         "lineHeight": 16,
         "textInsetX": 4,       # Text_SetCursor(.., 4)
         "textInsetY": 0,
