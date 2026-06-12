@@ -237,7 +237,7 @@ function wire() {
   try {
     await loadData();
     el.status.textContent =
-      'Assets loaded from the fireemblem8u decomp. Default box: 20 tiles (160px) × 4 lines — the FE8 event dialogue box.';
+      'Assets loaded from the fireemblem8u decomp. Default box: 20 tiles (160px) × 2 lines — the FE8 event dialogue box.';
     wire();
     render();
   } catch (err) {
