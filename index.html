@@ -80,14 +80,29 @@
         </div>
         <p class="stats" id="stats"></p>
         <p class="note">
-          Glyphs are rendered from the real FE8 16&times;16 2bpp bitmaps and
-          shaded through the real dialogue palette
-          (<code>gPal_HelpTextBox</code> @ colour <code>0xb</code>): pixel
-          value&nbsp;0 transparent, 1&nbsp;<code>#DEDEDE</code>,
-          2&nbsp;<code>#BDBDBD</code>, 3&nbsp;<code>#292929</code>. The window
-          frame is the real <code>Img_TalkBubble</code> tiles recoloured through
-          <code>Pal_TalkBubble</code>. Advance widths are exact.
+          Glyphs are rendered from the real FE8 16&times;16 2bpp bitmaps with
+          advance widths straight from the decomp. Each <strong>font group</strong>
+          switches glyphs, palette, and window together:
         </p>
+        <ul class="note">
+          <li>
+            <strong>Talk</strong> (dialogue): shaded through the dialogue palette
+            (<code>gPal_HelpTextBox</code> @ colour <code>0xb</code>, LUT
+            <code>gFontgrp_14</code>): 0 transparent, 1&nbsp;<code>#DEDEDE</code>,
+            2&nbsp;<code>#BDBDBD</code>, 3&nbsp;<code>#292929</code>, in the real
+            <code>Img_TalkBubble</code> frame (<code>Pal_TalkBubble</code>).
+          </li>
+          <li>
+            <strong>System</strong> (menus/help): the help-box/menu font shaded
+            through <code>TEXT_COLOR_SYSTEM_WHITE</code>
+            (<code>TEXT_COLOR_0123</code>, identity LUT <code>gFontgrp_3</code>)
+            over <code>Pal_Text</code>: 0 transparent,
+            1&nbsp;<code>#A58CDE</code>, 2&nbsp;<code>#FFFFFF</code>,
+            3&nbsp;<code>#3A3129</code> &mdash; white-on-dark, in the real FE8
+            menu window (<code>uiutils.c DrawUiFrame</code>,
+            <code>gUiFrameImage</code> + <code>gUiFramePaletteA</code>).
+          </li>
+        </ul>
       </section>
     </main>
 

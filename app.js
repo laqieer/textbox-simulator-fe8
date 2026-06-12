@@ -7,6 +7,7 @@
 // dialogue window frame (Img_TalkBubble + Pal_TalkBubble).
 
 import * as FE8Wrap from './wrap.js';
+import * as FE8SystemFrame from './frame-system.js';
 
 const GLYPH_ROWS = 16; // glyph cell is 16px tall
 const LINE_HEIGHT = FE8Wrap.LINE_HEIGHT; // 16px between baselines
@@ -30,9 +31,9 @@ const ctx = el.canvas.getContext('2d');
 
 let glyphTables = null; // { talk, system }
 let controlCodes = null;
-let palette = null; // [null/transparent, "#..", "#..", "#.."]
-let windowMeta = null;
-let windowImg = null; // HTMLImageElement of data/window.png
+let palettes = null; // { talk: [...], system: [...] }
+let windowMetas = null; // { talk, system }
+let windowImgs = null; // { talk: <img window.png>, system: <img window-system.png> }
 
 async function loadData() {
   const fetchJSON = (p) =>
@@ -40,18 +41,29 @@ async function loadData() {
       if (!r.ok) throw new Error(`${p}: ${r.status}`);
       return r.json();
     });
-  const [talk, system, c, pal, win] = await Promise.all([
+  const [talk, system, c, pal, palSys, win, winSys] = await Promise.all([
     fetchJSON('data/glyphs-talk.json'),
     fetchJSON('data/glyphs-system.json'),
     fetchJSON('data/control-codes.json'),
     fetchJSON('data/palette.json'),
+    fetchJSON('data/palette-system.json'),
     fetchJSON('data/window.json'),
+    fetchJSON('data/window-system.json'),
   ]);
   glyphTables = { talk, system };
   controlCodes = c;
-  palette = pal.colors;
-  windowMeta = win;
-  windowImg = await loadImage('data/window.png');
+  palettes = { talk: pal.colors, system: palSys.colors };
+  windowMetas = { talk: win, system: winSys };
+  const [wimg, wsimg] = await Promise.all([
+    loadImage('data/window.png'),
+    loadImage('data/window-system.png'),
+  ]);
+  windowImgs = { talk: wimg, system: wsimg };
+}
+
+// The active font group selects glyphs + palette + window + geometry together.
+function group() {
+  return el.fontGroup && el.fontGroup.value === 'system' ? 'system' : 'talk';
 }
 
 function loadImage(src) {
@@ -64,7 +76,7 @@ function loadImage(src) {
 }
 
 function activeWidths() {
-  return glyphTables[el.fontGroup ? el.fontGroup.value : 'talk'] || glyphTables.talk;
+  return glyphTables[group()] || glyphTables.talk;
 }
 
 // Decode one 16x16 2bpp glyph bitmap row -> per-pixel value (0..3), leftmost
@@ -82,6 +94,8 @@ function boxWidthPx() {
 // horizontally: [corner, top-edge, left-edge, fill]. Other corners/edges are
 // produced by H/V flips, exactly as PutTalkBubbleTm does with TILEREF flips.
 function drawFrame(originX, originY, innerW, innerH) {
+  const windowMeta = windowMetas.talk;
+  const windowImg = windowImgs.talk;
   const T = windowMeta.tile; // 8
   const cornerS = 0 * T;
   const topS = 1 * T;
@@ -127,8 +141,16 @@ function drawFrame(originX, originY, innerW, innerH) {
 function render() {
   if (!glyphTables) return;
 
+  const g = group();
+  const isSystem = g === 'system';
   const widths = activeWidths();
-  const bw = boxWidthPx();
+  const palette = palettes[g];
+  const windowMeta = windowMetas[g];
+
+  let bw = boxWidthPx();
+  // The menu frame (DrawUiFrame) steps two tiles at a time, so the inner width
+  // must be an even number of tiles. Round up for system mode.
+  if (isSystem && (bw / 8) % 2 !== 0) bw += 8;
   el.boxWidthPx.textContent = String(bw);
   const lineCount = Math.max(1, parseInt(el.boxHeight.value, 10) || 1);
   const zoom = Math.max(1, Math.min(8, parseInt(el.zoom.value, 10) || 1));
@@ -143,12 +165,15 @@ function render() {
   });
 
   const T = windowMeta.tile;
-  const inset = windowMeta.textInsetX;
+  const insetX = windowMeta.textInsetX;
+  const insetY = windowMeta.textInsetY || 0;
   const drawLines = Math.max(lineCount, result.lines.length);
   const innerW = bw;
   const innerH = drawLines * LINE_HEIGHT;
 
-  const border = showFrame ? T : 0;
+  // System frame is 2 tiles thick; talk bubble is 1 tile thick.
+  const borderTiles = isSystem ? windowMeta.borderTiles || 2 : 1;
+  const border = showFrame ? borderTiles * T : 0;
   const logicalW = innerW + 2 * border;
   const logicalH = innerH + 2 * border;
 
@@ -164,13 +189,29 @@ function render() {
   const originY = border;
 
   if (showFrame) {
-    drawFrame(originX, originY, innerW, innerH);
+    if (isSystem) {
+      FE8SystemFrame.drawSystemFrame(
+        ctx,
+        windowImgs.system,
+        windowMeta,
+        originX,
+        originY,
+        innerW,
+        innerH
+      );
+    } else {
+      drawFrame(originX, originY, innerW, innerH);
+    }
+  } else if (isSystem) {
+    // No frame: still paint the opaque menu interior so white text is visible.
+    ctx.fillStyle = windowMeta.fill;
+    ctx.fillRect(originX, originY, innerW, innerH);
   }
 
   // Draw glyphs, mapping pixel values 0..3 -> palette (0 transparent).
   result.lines.forEach((line, li) => {
-    let penX = originX + inset;
-    const top = originY + li * LINE_HEIGHT;
+    let penX = originX + insetX;
+    const top = originY + insetY + li * LINE_HEIGHT;
     for (const item of line.items) {
       if (item.type !== 'char') continue; // control/raw: zero width, no glyph
       const entry = widths[String(item.code)] || widths[String(0x3f)];
@@ -194,13 +235,24 @@ function render() {
 
   const overflowW = result.width > bw;
   const overflowH = result.lines.length > lineCount;
+  const modeLabel = isSystem
+    ? 'System (menu/help font, Pal_Text, menu window)'
+    : 'Talk (dialogue font, gPal_HelpTextBox, talk bubble)';
   el.stats.textContent =
-    `lines: ${result.lines.length} / ${lineCount}` +
+    `mode: ${modeLabel}` +
+    `  ·  lines: ${result.lines.length} / ${lineCount}` +
     `  ·  widest line: ${result.width}px / ${bw}px` +
     (overflowW ? '  ⚠ width overflow' : '') +
     (overflowH ? '  ⚠ too many lines' : '');
   el.stats.style.color = overflowW || overflowH ? '#ffb0b0' : '';
 }
+
+// Default sample text per font group (set when switching groups if the text is
+// still an untouched default for the other group).
+const SAMPLE = {
+  talk: 'We must hurry to[LF]Castle Renais.[X]',
+  system: 'Fight[LF]Item[X]',
+};
 
 function insertAtCursor(textarea, snippet) {
   const start = textarea.selectionStart;
@@ -213,9 +265,11 @@ function insertAtCursor(textarea, snippet) {
 }
 
 function wire() {
+  // The font group is handled by its own listener below (it may swap the sample
+  // text before re-rendering), so it is intentionally excluded here to avoid a
+  // redundant render with stale text.
   const inputs = [
     el.text,
-    el.fontGroup,
     el.boxWidthTiles,
     el.boxHeight,
     el.zoom,
@@ -225,6 +279,17 @@ function wire() {
   ['input', 'change'].forEach((ev) => {
     inputs.forEach((node) => node.addEventListener(ev, render));
   });
+  // When the font group changes and the text is still an untouched sample,
+  // swap in a sensible sample for the newly-selected group, then render once.
+  if (el.fontGroup) {
+    el.fontGroup.addEventListener('change', () => {
+      const cur = el.text.value.trim();
+      if (cur === SAMPLE.talk.trim() || cur === SAMPLE.system.trim() || cur === '') {
+        el.text.value = SAMPLE[group()];
+      }
+      render();
+    });
+  }
   el.quickcodes.addEventListener('click', (e) => {
     const btn = e.target.closest('button[data-code]');
     if (!btn) return;
@@ -237,7 +302,9 @@ function wire() {
   try {
     await loadData();
     el.status.textContent =
-      'Assets loaded from the fireemblem8u decomp. Default box: 20 tiles (160px) × 2 lines — the FE8 event dialogue box.';
+      'Assets loaded from the fireemblem8u decomp. Talk = the FE8 event dialogue box ' +
+      '(gPal_HelpTextBox @ 0xb, talk bubble). System = the menu/help font ' +
+      '(TEXT_COLOR_SYSTEM_WHITE / Pal_Text, the DrawUiFrame menu window).';
     wire();
     render();
   } catch (err) {

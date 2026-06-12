@@ -14,6 +14,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { createCanvas, loadImage } from '@napi-rs/canvas';
 import * as FE8Wrap from '../wrap.js';
+import * as FE8SystemFrame from '../frame-system.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, '..');
@@ -22,11 +23,14 @@ const data = (f) => JSON.parse(readFileSync(join(root, 'data', f), 'utf8'));
 const talk = data('glyphs-talk.json');
 const system = data('glyphs-system.json');
 const controlCodes = data('control-codes.json');
-const palette = data('palette.json').colors;
-const windowMeta = data('window.json');
+const palettes = {
+  talk: data('palette.json').colors,
+  system: data('palette-system.json').colors,
+};
+const windowMetas = { talk: data('window.json'), system: data('window-system.json') };
 const glyphTables = { talk, system };
 
-const T = windowMeta.tile;
+const T = windowMetas.talk.tile;
 
 function pixelValue(row, x) {
   return (row >>> (x * 2)) & 0x3;
@@ -62,15 +66,23 @@ function drawFrame(ctx, img, originX, originY, innerW, innerH) {
 }
 
 async function renderPNG({ text, group = 'talk', boxTiles = 20, lines = 4, zoom = 4 }) {
+  const isSystem = group === 'system';
   const widths = glyphTables[group];
-  const img = await loadImage(join(root, 'data', 'window.png'));
+  const palette = palettes[group];
+  const windowMeta = windowMetas[group];
+  const img = await loadImage(
+    join(root, 'data', isSystem ? 'window-system.png' : 'window.png')
+  );
 
-  const innerW = boxTiles * 8;
+  let innerW = boxTiles * 8;
+  // The menu frame steps two tiles at a time -> inner width must be even tiles.
+  if (isSystem && (innerW / 8) % 2 !== 0) innerW += 8;
   const result = FE8Wrap.wrap(text, { widths, controlCodes, boxWidth: innerW });
   const drawLines = Math.max(lines, result.lines.length);
   const innerH = drawLines * windowMeta.lineHeight;
 
-  const border = T;
+  const borderTiles = isSystem ? windowMeta.borderTiles || 2 : 1;
+  const border = borderTiles * T;
   const logicalW = innerW + 2 * border;
   const logicalH = innerH + 2 * border;
 
@@ -84,12 +96,17 @@ async function renderPNG({ text, group = 'talk', boxTiles = 20, lines = 4, zoom 
 
   const originX = border;
   const originY = border;
-  drawFrame(ctx, img, originX, originY, innerW, innerH);
+  if (isSystem) {
+    FE8SystemFrame.drawSystemFrame(ctx, img, windowMeta, originX, originY, innerW, innerH);
+  } else {
+    drawFrame(ctx, img, originX, originY, innerW, innerH);
+  }
 
-  const inset = windowMeta.textInsetX;
+  const insetX = windowMeta.textInsetX;
+  const insetY = windowMeta.textInsetY || 0;
   result.lines.forEach((line, li) => {
-    let penX = originX + inset;
-    const top = originY + li * windowMeta.lineHeight;
+    let penX = originX + insetX;
+    const top = originY + insetY + li * windowMeta.lineHeight;
     for (const item of line.items) {
       if (item.type !== 'char') continue;
       const entry = widths[String(item.code)] || widths[String(0x3f)];
@@ -122,11 +139,20 @@ const previews = [
     file: 'preview-2.png',
     text: 'The Demon King once[LF]threatened to engulf[LF]Magvel in darkness,[LF]but was sealed away.[X]',
   },
+  {
+    file: 'preview-system.png',
+    text: 'Fight[LF]Item[LF]Status[LF]Options[X]',
+    group: 'system',
+    boxTiles: 12,
+    lines: 4,
+    zoom: 4,
+  },
 ];
 
 for (const p of previews) {
-  const buf = await renderPNG({ text: p.text });
+  const { file, ...opts } = p;
+  const buf = await renderPNG(opts);
   const { writeFileSync } = await import('node:fs');
-  writeFileSync(join(root, 'docs', p.file), buf);
-  console.log(`wrote docs/${p.file} (${buf.length} bytes)`);
+  writeFileSync(join(root, 'docs', file), buf);
+  console.log(`wrote docs/${file} (${buf.length} bytes)`);
 }
