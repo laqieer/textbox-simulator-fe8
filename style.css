@@ -157,6 +157,43 @@ textarea {
   border-color: var(--accent);
 }
 
+.source-panel {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #2e2a40;
+}
+
+.source-output textarea {
+  min-height: 5.5rem;
+}
+
+.source-actions {
+  align-items: center;
+}
+
+.source-actions button {
+  font-size: 0.85rem;
+  background: var(--accent);
+  color: white;
+  border: 1px solid var(--accent);
+  border-radius: 5px;
+  padding: 0.35rem 0.7rem;
+  cursor: pointer;
+}
+
+.source-actions button:hover {
+  filter: brightness(1.08);
+}
+
+#copyStatus {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+#copyStatus.error {
+  color: #ff8080;
+}
+
 code {
   font-family: ui-monospace, monospace;
   background: #2a2640;

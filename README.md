@@ -23,7 +23,7 @@ Live use: just open `index.html`, or serve the folder (see below).
 
 ## What it does
 
-- Type FE8 dialogue text (with `[..]` control codes like `[LF]`, `[X]`, `[A]`).
+- Type FE8 dialogue text (with `[..]` control codes like `[NL]`, `[X]`, `[A]`).
 - See it laid out live in a textbox whose width (in 8px tiles) and line count
   are configurable. Defaults match the FE8 **event dialogue box**: 20 tiles
   (160px) wide × 4 lines (from `StartCgText(3, 0x12, 0x14, 4, …)` in
@@ -31,8 +31,10 @@ Live use: just open `index.html`, or serve the folder (see below).
   `src/cgtext.c` line ~204).
 - Optional **auto-wrap** at the box width (word-aware) to preview how wide a
   line is getting. Note: real FE8 scripts are *hand-wrapped* with explicit
-  `[LF]` codes — the game engine never auto-wraps — so auto-wrap is a preview
-  aid, off by default.
+  `[NL]`/`[LF]` codes — the game engine never auto-wraps — so auto-wrap is a
+  preview aid, off by default.
+- Copy a `texts/texts.txt`-ready source string from the preview. Auto-wrapped
+  line breaks are emitted as `[NL]`, and the `[X]` terminator is preserved.
 - Real glyphs: each character is drawn from its actual FE8 16×16 2bpp bitmap.
 
 ## Scope / honesty

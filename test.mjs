@@ -168,6 +168,32 @@ console.log('Test 3: auto-wrap breaks a long string into >= 2 lines');
   assert(exact, 'auto-wrapped line widths remain exact');
 }
 
+console.log('Test 3b: wrapToSource emits paste-ready [NL] source');
+{
+  const boxWidth = 160;
+  const wrapped = FE8Wrap.wrap(LONG, { widths, controlCodes, autoWrap: true, boxWidth });
+  const source = FE8Wrap.wrapToSource(LONG, {
+    widths,
+    controlCodes,
+    autoWrap: true,
+    boxWidth,
+    lineBreakCode: 'NL',
+  });
+  const nlCount = (source.match(/\[NL\]/g) || []).length;
+  assert(nlCount === wrapped.lines.length - 1, `[NL] count ${nlCount} matches preview breaks`);
+  assert(source.endsWith('[X]'), 'wrapToSource preserves the [X] terminator');
+
+  const pasted = FE8Wrap.wrap(source, { widths, controlCodes, autoWrap: false });
+  assert(pasted.lines.length === wrapped.lines.length, 'pasted source has the same line count');
+  const sameWidths = pasted.lines.every((ln, i) => ln.width === wrapped.lines[i].width);
+  assert(sameWidths, 'pasted source keeps the same per-line widths');
+  assert(
+    FE8Wrap.wrapToSource('Hello[CR]World[X]', { widths, controlCodes }) ===
+      'Hello[CR]World[X]',
+    'explicit [CR] page breaks are preserved'
+  );
+}
+
 console.log('Test 4: known per-glyph widths (spot check)');
 {
   const checks = { A: [65, 6], W: [87, 8], i: [105, 2], m: [109, 6], ' ': [32, 4], '.': [46, 2] };

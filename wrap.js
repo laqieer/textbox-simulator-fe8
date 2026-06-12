@@ -69,8 +69,10 @@ function itemWidth(item, widths) {
 }
 
 // Core wrap. Returns:
-//   { lines: [ { items: [...], width } ], width, height, truncated }
+//   { lines: [ { items: [...], width, breakToken } ], width, height, truncated, endToken }
 // where items are the laid-out tokens for a line (chars + zero-width ctrls).
+// breakToken is the explicit source line break that ended the line, a synthetic
+// auto-wrap marker, or null for the final line.
 // `truncated` is true when an [X] terminator cuts off rendered content that
 // follows it (more glyphs or a line break before any subsequent [X]).
 //
@@ -88,12 +90,15 @@ function wrap(text, options) {
   const tokens = tokenize(text, controlCodes);
 
   const lines = [];
-  let cur = { items: [], width: 0 };
+  const makeLine = () => ({ items: [], width: 0, breakToken: null });
+  let cur = makeLine();
   let truncated = false;
+  let endToken = null;
 
-  const pushLine = () => {
+  const pushLine = (breakToken = null) => {
+    cur.breakToken = breakToken;
     lines.push(cur);
-    cur = { items: [], width: 0 };
+    cur = makeLine();
   };
 
   // For word-aware auto-wrap we track the start index of the current word
@@ -112,6 +117,7 @@ function wrap(text, options) {
 
     if (tok.type === 'ctrl') {
       if (tok.layout === 'end') {
+        endToken = tok;
         // [X] terminates the string. If any layout-affecting content follows
         // (more glyphs or line breaks before the next [X], if any), it is cut
         // off and never rendered -- flag that for callers.
@@ -135,7 +141,7 @@ function wrap(text, options) {
         break; // [X] terminates
       }
       if (tok.layout === 'newline' || tok.layout === 'newline2') {
-        pushLine();
+        pushLine(tok);
         resetWord();
         continue;
       }
@@ -181,7 +187,7 @@ function wrap(text, options) {
             const sp = cur.items.pop();
             cur.width -= glyphWidth(sp.code, widths);
           }
-          pushLine();
+          pushLine({ type: 'wrap' });
           // start the new line with the moved word
           let newW = 0;
           for (const it of moved) newW += itemWidth(it, widths);
@@ -190,7 +196,7 @@ function wrap(text, options) {
           wordStart = 0;
           wordWidth = newW;
         } else {
-          pushLine();
+          pushLine({ type: 'wrap' });
           resetWord();
         }
       }
@@ -211,7 +217,7 @@ function wrap(text, options) {
   for (const ln of lines) if (ln.width > maxWidth) maxWidth = ln.width;
   const height = lines.length * LINE_HEIGHT;
 
-  return { lines, width: maxWidth, height, truncated };
+  return { lines, width: maxWidth, height, truncated, endToken };
 }
 
 // Convenience: measured width (px) of the longest line and total height,
@@ -221,12 +227,69 @@ function measure(text, options) {
   return { width: r.width, height: r.height, lines: r.lines.length };
 }
 
-const api = { tokenize, glyphWidth, wrap, measure, LINE_HEIGHT };
+function tokenToSource(token) {
+  if (!token) return '';
+  if (token.type === 'char') return String.fromCharCode(token.code);
+  if ((token.type === 'ctrl' || token.type === 'raw') && token.name != null) {
+    return `[${token.name}]`;
+  }
+  return '';
+}
+
+function lineToSource(line) {
+  return line.items.map(tokenToSource).join('');
+}
+
+function sourceFromWrapResult(result, options = {}) {
+  const lineBreakCode = options.lineBreakCode || 'NL';
+  const autoWrapBreak = `[${lineBreakCode}]`;
+  const lines = result.lines || [];
+  let source = '';
+
+  for (let i = 0; i < lines.length; i++) {
+    source += lineToSource(lines[i]);
+    if (i < lines.length - 1) {
+      const breakToken = lines[i].breakToken;
+      source += breakToken && breakToken.type === 'ctrl'
+        ? tokenToSource(breakToken)
+        : autoWrapBreak;
+    }
+  }
+
+  if (result.endToken) source += tokenToSource(result.endToken);
+  return source;
+}
+
+function wrapToSource(text, options = {}) {
+  return sourceFromWrapResult(wrap(text, options), options);
+}
+
+const api = {
+  tokenize,
+  glyphWidth,
+  wrap,
+  measure,
+  tokenToSource,
+  lineToSource,
+  sourceFromWrapResult,
+  wrapToSource,
+  LINE_HEIGHT,
+};
 
 // Attach to global for plain <script> usage.
 if (typeof globalThis !== 'undefined') {
   globalThis.FE8Wrap = api;
 }
 
-export { tokenize, glyphWidth, wrap, measure, LINE_HEIGHT };
+export {
+  tokenize,
+  glyphWidth,
+  wrap,
+  measure,
+  tokenToSource,
+  lineToSource,
+  sourceFromWrapResult,
+  wrapToSource,
+  LINE_HEIGHT,
+};
 export default api;

@@ -25,6 +25,9 @@ const el = {
   stats: document.getElementById('stats'),
   status: document.getElementById('status'),
   quickcodes: document.getElementById('quickcodes'),
+  sourceOutput: document.getElementById('sourceOutput'),
+  copySource: document.getElementById('copySource'),
+  copyStatus: document.getElementById('copyStatus'),
 };
 
 const ctx = el.canvas.getContext('2d');
@@ -245,13 +248,19 @@ function render() {
     (overflowW ? '  ⚠ width overflow' : '') +
     (overflowH ? '  ⚠ too many lines' : '');
   el.stats.style.color = overflowW || overflowH ? '#ffb0b0' : '';
+
+  if (el.sourceOutput) {
+    el.sourceOutput.value = FE8Wrap.sourceFromWrapResult(result, {
+      lineBreakCode: 'NL',
+    });
+  }
 }
 
 // Default sample text per font group (set when switching groups if the text is
 // still an untouched default for the other group).
 const SAMPLE = {
-  talk: 'We must hurry to[LF]Castle Renais.[X]',
-  system: 'Fight[LF]Item[X]',
+  talk: 'We must hurry to[NL]Castle Renais.[X]',
+  system: 'Fight[NL]Item[X]',
 };
 
 function insertAtCursor(textarea, snippet) {
@@ -262,6 +271,35 @@ function insertAtCursor(textarea, snippet) {
   const pos = start + snippet.length;
   textarea.setSelectionRange(pos, pos);
   textarea.focus();
+}
+
+let copyStatusTimer = null;
+function showCopyStatus(message, isError = false) {
+  if (!el.copyStatus) return;
+  el.copyStatus.textContent = message;
+  el.copyStatus.classList.toggle('error', isError);
+  if (copyStatusTimer) clearTimeout(copyStatusTimer);
+  copyStatusTimer = setTimeout(() => {
+    el.copyStatus.textContent = '';
+    el.copyStatus.classList.remove('error');
+  }, 2500);
+}
+
+async function copyWrappedSource() {
+  if (!el.sourceOutput) return;
+  const value = el.sourceOutput.value;
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(value);
+    } else {
+      el.sourceOutput.focus();
+      el.sourceOutput.select();
+      if (!document.execCommand('copy')) throw new Error('copy command failed');
+    }
+    showCopyStatus('Copied.');
+  } catch (err) {
+    showCopyStatus('Select and copy manually.', true);
+  }
 }
 
 function wire() {
@@ -296,6 +334,9 @@ function wire() {
     insertAtCursor(el.text, btn.dataset.code);
     render();
   });
+  if (el.copySource) {
+    el.copySource.addEventListener('click', copyWrappedSource);
+  }
 }
 
 (async function main() {
