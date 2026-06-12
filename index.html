@@ -28,6 +28,13 @@
 
         <div class="row">
           <label class="field small">
+            <span>Font group</span>
+            <select id="fontGroup">
+              <option value="talk" selected>Talk (dialogue)</option>
+              <option value="system">System</option>
+            </select>
+          </label>
+          <label class="field small">
             <span>Box width (tiles)</span>
             <input id="boxWidthTiles" type="number" min="1" max="30" value="20" />
           </label>
@@ -51,8 +58,8 @@
             <span>Auto-wrap at box width (preview only &mdash; FE8 scripts are hand-wrapped with <code>[LF]</code>)</span>
           </label>
           <label class="check">
-            <input id="showGuides" type="checkbox" checked />
-            <span>Show box / line guides</span>
+            <input id="showFrame" type="checkbox" checked />
+            <span>Show the real FE8 dialogue window frame</span>
           </label>
         </div>
 
@@ -73,9 +80,13 @@
         </div>
         <p class="stats" id="stats"></p>
         <p class="note">
-          Glyphs are rendered from the real FE8 16&times;16 2bpp bitmaps; advance
-          widths are exact. Anti-aliasing shades are flattened to a single ink
-          color.
+          Glyphs are rendered from the real FE8 16&times;16 2bpp bitmaps and
+          shaded through the real dialogue palette
+          (<code>gPal_HelpTextBox</code> @ colour <code>0xb</code>): pixel
+          value&nbsp;0 transparent, 1&nbsp;<code>#DEDEDE</code>,
+          2&nbsp;<code>#BDBDBD</code>, 3&nbsp;<code>#292929</code>. The window
+          frame is the real <code>Img_TalkBubble</code> tiles recoloured through
+          <code>Pal_TalkBubble</code>. Advance widths are exact.
         </p>
       </section>
     </main>

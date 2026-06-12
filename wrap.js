@@ -59,6 +59,15 @@ function glyphWidth(code, widths) {
   return q ? q.width : 0;
 }
 
+// Layout-advance width (px) of a single laid-out item: a glyph's advance for a
+// char, +8 for an [A]/advance8 control, 0 otherwise. Single source of truth so
+// that the auto-wrap line-width recomputes stay consistent with the engine.
+function itemWidth(item, widths) {
+  if (item.type === 'char') return glyphWidth(item.code, widths);
+  if (item.type === 'ctrl' && item.layout === 'advance8') return 8;
+  return 0;
+}
+
 // Core wrap. Returns:
 //   { lines: [ { items: [...], width } ], width, height, truncated }
 // where items are the laid-out tokens for a line (chars + zero-width ctrls).
@@ -130,6 +139,14 @@ function wrap(text, options) {
         resetWord();
         continue;
       }
+      if (tok.layout === 'advance8') {
+        // [A] (0x03): adds 8px to the line width (GetCgTextBoxDimensions
+        // case 0x03: `w += 8`). Treated as a word boundary, like a space.
+        cur.items.push(tok);
+        cur.width += 8;
+        resetWord();
+        continue;
+      }
       // any other control code: consumed, zero width, no layout effect
       cur.items.push(tok);
       continue;
@@ -154,9 +171,7 @@ function wrap(text, options) {
           const moved = cur.items.splice(wordStart);
           // recompute current line width after removing the moved word
           cur.width = 0;
-          for (const it of cur.items) {
-            if (it.type === 'char') cur.width += glyphWidth(it.code, widths);
-          }
+          for (const it of cur.items) cur.width += itemWidth(it, widths);
           // trim a trailing space left on the line
           while (
             cur.items.length &&
@@ -169,9 +184,7 @@ function wrap(text, options) {
           pushLine();
           // start the new line with the moved word
           let newW = 0;
-          for (const it of moved) {
-            if (it.type === 'char') newW += glyphWidth(it.code, widths);
-          }
+          for (const it of moved) newW += itemWidth(it, widths);
           cur.items = moved;
           cur.width = newW;
           wordStart = 0;
