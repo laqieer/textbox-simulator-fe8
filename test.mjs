@@ -22,7 +22,13 @@ const DECOMP = process.env.FE8_DECOMP || '/home/laqieer/fireemblem8u';
 const talk = JSON.parse(readFileSync(join(here, 'data', 'glyphs-talk.json'), 'utf8'));
 const system = JSON.parse(readFileSync(join(here, 'data', 'glyphs-system.json'), 'utf8'));
 const palette = JSON.parse(readFileSync(join(here, 'data', 'palette.json'), 'utf8'));
+const paletteSystem = JSON.parse(
+  readFileSync(join(here, 'data', 'palette-system.json'), 'utf8')
+);
 const windowMeta = JSON.parse(readFileSync(join(here, 'data', 'window.json'), 'utf8'));
+const windowSystem = JSON.parse(
+  readFileSync(join(here, 'data', 'window-system.json'), 'utf8')
+);
 const controlCodes = JSON.parse(
   readFileSync(join(here, 'data', 'control-codes.json'), 'utf8')
 );
@@ -216,6 +222,30 @@ console.log('Test 8: palette.json matches the resolved dialogue colours');
   assert(palette.colors[3] === '#292929', `pixel 3 = #292929 (got ${palette.colors[3]})`);
 }
 
+console.log('Test 8b: palette-system.json matches the resolved system text colours');
+{
+  // TEXT_COLOR_SYSTEM_WHITE = TEXT_COLOR_0123 -> identity LUT gFontgrp_3 over
+  // Pal_Text, pixel 0 transparent (InitSystemTextFont forces PAL_COLOR(..,0)=0).
+  assert(paletteSystem.colors[0] === null, 'system pixel 0 transparent');
+  assert(paletteSystem.colors[1] === '#A58CDE', `system pixel 1 = #A58CDE (got ${paletteSystem.colors[1]})`);
+  assert(paletteSystem.colors[2] === '#FFFFFF', `system pixel 2 = #FFFFFF (got ${paletteSystem.colors[2]})`);
+  assert(paletteSystem.colors[3] === '#3A3129', `system pixel 3 = #3A3129 (got ${paletteSystem.colors[3]})`);
+}
+
+console.log('Test 8c: window-system.json geometry + DrawUiFrame model');
+{
+  assert(windowSystem.borderTiles === 2, 'system frame is 2 tiles thick (DrawUiFrame corner blocks)');
+  assert(windowSystem.lineHeight === 16, 'system line height = 16');
+  assert(windowSystem.tile === 8, 'system tile = 8');
+  // gUiutils_0 model tile indices (uiutils.c).
+  const expectModel = [0x01, 0x02, 0x03, 0x05, 0x07, 0x08, 0x09, 0x0a,
+    0x06, 0x09, 0x09, 0x0a, 0x1a, 0x1b, 0x1b, 0x21];
+  const modelOk =
+    windowSystem.model.length === 16 &&
+    windowSystem.model.every((v, i) => v === expectModel[i]);
+  assert(modelOk, 'system frame model matches gUiutils_0 (DrawUiFrame style 0)');
+}
+
 if (decompAvailable) {
   console.log('Test 9: Talk glyph widths + full bitmaps match the decomp byte-for-byte');
   {
@@ -260,6 +290,61 @@ if (decompAvailable) {
     assert(idx(4) === '#E6E6DE', `Pal_TalkBubble idx4 (fill) = #E6E6DE (got ${idx(4)})`);
     assert(idx(14) === '#BDBDBD', `Pal_TalkBubble idx14 = #BDBDBD (got ${idx(14)})`);
     assert(idx(15) === '#292929', `Pal_TalkBubble idx15 = #292929 (got ${idx(15)})`);
+  }
+
+  console.log('Test 12: palette-system.json RGB equals resolved Pal_Text @ TEXT_COLOR_SYSTEM_WHITE');
+  {
+    // Pal_Text is a .gbapal blob; identity LUT (gFontgrp_3) maps pixel n -> idx n.
+    const buf = readFileSync(join(DECOMP, 'graphics/misc/Pal_Text.gbapal'));
+    const idx = (i) => bgr555ToHex(buf.readUInt16LE(i * 2));
+    assert(idx(1) === paletteSystem.colors[1], `Pal_Text idx1 ${idx(1)} == system pixel1 ${paletteSystem.colors[1]}`);
+    assert(idx(2) === paletteSystem.colors[2], `Pal_Text idx2 ${idx(2)} == system pixel2 ${paletteSystem.colors[2]}`);
+    assert(idx(3) === paletteSystem.colors[3], `Pal_Text idx3 ${idx(3)} == system pixel3 ${paletteSystem.colors[3]}`);
+  }
+
+  console.log('Test 13: System glyph widths + full bitmaps match the decomp byte-for-byte');
+  {
+    const { glyphs, entries } = parseGlyphTable(
+      join(DECOMP, 'src/data/fonts/glyphs_1.h'),
+      'TextGlyphs_System'
+    );
+    const fallback = entries[0x3f];
+    const checkCodes = [0x46, 0x69, 0x67, 0x68, 0x74, 0x53, 0x6f]; // F i g h t S o
+    let matched = 0;
+    for (const code of checkCodes) {
+      const name = entries[code] != null ? entries[code] : fallback;
+      const g = glyphs[name];
+      const j = system[String(code)];
+      if (!g || !j) continue;
+      const widthOk = g.width === j.width;
+      const bmpOk =
+        g.bitmap.length === j.bitmap.length &&
+        g.bitmap.every((v, k) => (v >>> 0) === (j.bitmap[k] >>> 0));
+      assert(widthOk, `system glyph 0x${code.toString(16)} width matches decomp (${j.width})`);
+      assert(bmpOk, `system glyph 0x${code.toString(16)} bitmap matches decomp byte-for-byte`);
+      if (widthOk && bmpOk) matched++;
+    }
+    assert(matched >= 6, `>= 6 System glyphs fully match the decomp (matched ${matched})`);
+  }
+
+  console.log('Test 14: window-system.png pixels match gUiFrameImage @ gUiFramePaletteA');
+  {
+    // Spot-check the centre fill tile (model[6] = gUiFrameImage tile 0x09) is the
+    // opaque box-fill colour gUiFramePaletteA[0] declared in window-system.json.
+    const palBuf = readFileSync(join(DECOMP, 'graphics/misc/gUiFramePaletteA.gbapal'));
+    const tiles = readFileSync(join(DECOMP, 'graphics/misc/gUiFrameImage.4bpp'));
+    // The centre fill tile (model[6] = gUiFrameImage tile 0x09) is a single
+    // solid palette index; window-system.json's fill must be that colour.
+    const fillIdx = tiles[0x09 * 32] & 0x0f; // first 4bpp pixel of tile 0x09
+    let solid = true;
+    for (let b = 0; b < 32; b++) {
+      if ((tiles[0x09 * 32 + b] & 0x0f) !== fillIdx) solid = false;
+      if (((tiles[0x09 * 32 + b] >> 4) & 0x0f) !== fillIdx) solid = false;
+    }
+    assert(solid, 'gUiFrameImage tile 0x09 (centre fill) is a single solid palette index');
+    assert(windowSystem.fillIndex === fillIdx, `system fillIndex ${windowSystem.fillIndex} == decomp ${fillIdx}`);
+    const fill = bgr555ToHex(palBuf.readUInt16LE(fillIdx * 2));
+    assert(windowSystem.fill === fill, `system fill ${windowSystem.fill} == gUiFramePaletteA[${fillIdx}] ${fill}`);
   }
 } else {
   console.log('(decomp not found at FE8_DECOMP; skipping byte-for-byte decomp-match tests)');

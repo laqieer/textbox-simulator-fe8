@@ -1,0 +1,17 @@
+{
+  "colors": [
+    null,
+    "#A58CDE",
+    "#FFFFFF",
+    "#3A3129"
+  ],
+  "source": "Pal_Text",
+  "color": "TEXT_COLOR_SYSTEM_WHITE (TEXT_COLOR_0123)",
+  "lut": "gFontgrp_3 (identity)",
+  "lut_pixel_to_palidx": {
+    "0": 0,
+    "1": 1,
+    "2": 2,
+    "3": 3
+  }
+}
