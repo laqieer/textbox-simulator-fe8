@@ -217,13 +217,19 @@ code {
   line-height: 0;
 }
 
-#fontGroup {
+#fontGroup,
+#boxPreset {
   background: #15131f;
   color: var(--ink);
   border: 1px solid #3a3550;
   border-radius: 6px;
   padding: 0.4rem;
   font-size: 0.95rem;
+}
+
+.field.preset {
+  width: 200px;
+  margin-bottom: 0.5rem;
 }
 
 canvas {

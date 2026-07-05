@@ -26,9 +26,20 @@ Live use: just open `index.html`, or serve the folder (see below).
 - Type FE8 dialogue text (with `[..]` control codes like `[NL]`, `[X]`, `[A]`).
 - See it laid out live in a textbox whose width (in 8px tiles) and line count
   are configurable. Defaults match the FE8 **event dialogue box**: 20 tiles
-  (160px) wide × 4 lines (from `StartCgText(3, 0x12, 0x14, 4, …)` in
-  `src/eventscr.c`; the text area is `boxWidth_tiles * 8` px, see
-  `src/cgtext.c` line ~204).
+  (160px) wide × 2 lines (from `StartCgText(3, 0x12, 0x14, 4, …)` in
+  `src/eventscr.c` — the height arg is 4 tiles = 2 text lines; the text area is
+  `boxWidth_tiles * 8` px, see `src/cgtext.c` line ~204).
+- Pick a **box preset** to jump to a real FE8 dialogue box's dimensions, or set
+  the width/lines by hand for a custom box (editing either flips the dropdown to
+  *Custom*). Every preset is a real `StartCgText(x, y, widthTiles, heightTiles,
+  …)` box from the decomp and — like the game's story boxes — they differ only
+  in width:
+  - **Event dialogue** — 20 tiles / 160px × 2 lines — `src/eventscr.c` (the
+    default; FE8 story text).
+  - **Class change** — 18 tiles / 144px × 2 lines — `src/classchg-event.c`
+    (promotion text).
+  - **Augury (prep)** — 17 tiles / 136px × 2 lines — `src/prep_80A0760.c`
+    (`FortuneSubMenu_StartText`).
 - Optional **auto-wrap** at the box width (word-aware) to preview how wide a
   line is getting. Note: real FE8 scripts are *hand-wrapped* with explicit
   `[NL]`/`[LF]` codes — the game engine never auto-wraps — so auto-wrap is a
