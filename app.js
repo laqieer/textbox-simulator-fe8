@@ -15,6 +15,7 @@ const LINE_HEIGHT = FE8Wrap.LINE_HEIGHT; // 16px between baselines
 const el = {
   text: document.getElementById('text'),
   fontGroup: document.getElementById('fontGroup'),
+  boxPreset: document.getElementById('boxPreset'),
   boxWidthTiles: document.getElementById('boxWidthTiles'),
   boxWidthPx: document.getElementById('boxWidthPx'),
   boxHeight: document.getElementById('boxHeight'),
@@ -92,6 +93,47 @@ function boxWidthPx() {
   return Math.max(1, parseInt(el.boxWidthTiles.value, 10) || 1) * 8;
 }
 
+// Box presets map friendly FE8 dialogue-box names to their real geometry
+// (width in 8px tiles + visible line count), read straight off the
+// `data-tiles`/`data-lines` attributes in index.html. Each entry corresponds to
+// a real StartCgText(x, y, widthTiles, heightTiles, ...) call in the decomp
+// (heightTiles=4 -> 2 visible lines):
+//   event       -> StartCgText(3, 0x12, 0x14, 4)  src/eventscr.c   (story dialogue)
+//   classchange -> StartCgText(0x16,0x12,0x12,4)  src/classchg-event.c
+//   augury      -> StartCgText(10, 7, 17, 4)      src/prep_80A0760.c (Fortune sub-menu)
+// Selecting a preset drives the width/lines inputs; editing those inputs by hand
+// flips the dropdown to "Custom" (see syncPresetToInputs). Unlike RubyRaven6's
+// pokeemerald fork we intentionally do NOT stash per-size text: for a wrap
+// preview you want the same text to persist across sizes to see where it breaks.
+function applyPreset() {
+  if (!el.boxPreset) return;
+  const opt = el.boxPreset.selectedOptions[0];
+  if (!opt || opt.value === 'custom' || !opt.dataset.tiles) return;
+  el.boxWidthTiles.value = opt.dataset.tiles;
+  el.boxHeight.value = opt.dataset.lines;
+}
+
+// Pick the preset whose geometry equals the current width/lines inputs, or
+// 'custom' when nothing matches. Keeps the dropdown label honest as the user
+// types custom dimensions.
+function matchingPresetValue() {
+  if (!el.boxPreset) return 'custom';
+  const tiles = parseInt(el.boxWidthTiles.value, 10);
+  const lines = parseInt(el.boxHeight.value, 10);
+  for (const opt of el.boxPreset.options) {
+    if (!opt.dataset.tiles) continue; // the "Custom" sentinel
+    if (parseInt(opt.dataset.tiles, 10) === tiles &&
+        parseInt(opt.dataset.lines, 10) === lines) {
+      return opt.value;
+    }
+  }
+  return 'custom';
+}
+
+function syncPresetToInputs() {
+  if (el.boxPreset) el.boxPreset.value = matchingPresetValue();
+}
+
 // Draw the real FE8 dialogue window frame (9-slice from window.png) into a
 // region of the canvas. window.png contains 4 base 8x8 tiles laid out
 // horizontally: [corner, top-edge, left-edge, fill]. Other corners/edges are
@@ -156,6 +198,7 @@ function render() {
   if (isSystem && (bw / 8) % 2 !== 0) bw += 8;
   el.boxWidthPx.textContent = String(bw);
   const lineCount = Math.max(1, parseInt(el.boxHeight.value, 10) || 1);
+  syncPresetToInputs();
   const zoom = Math.max(1, Math.min(8, parseInt(el.zoom.value, 10) || 1));
   const autoWrap = el.autoWrap.checked;
   const showFrame = el.showFrame ? el.showFrame.checked : true;
@@ -325,6 +368,13 @@ function wire() {
       if (cur === SAMPLE.talk.trim() || cur === SAMPLE.system.trim() || cur === '') {
         el.text.value = SAMPLE[group()];
       }
+      render();
+    });
+  }
+  // Applying a box preset drives the width/lines inputs, then re-renders once.
+  if (el.boxPreset) {
+    el.boxPreset.addEventListener('change', () => {
+      applyPreset();
       render();
     });
   }

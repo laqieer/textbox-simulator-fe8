@@ -34,6 +34,15 @@
               <option value="system">System</option>
             </select>
           </label>
+          <label class="field preset">
+            <span>Box preset</span>
+            <select id="boxPreset">
+              <option value="event" data-tiles="20" data-lines="2" selected>Event dialogue &mdash; 160px</option>
+              <option value="classchange" data-tiles="18" data-lines="2">Class change &mdash; 144px</option>
+              <option value="augury" data-tiles="17" data-lines="2">Augury (prep) &mdash; 136px</option>
+              <option value="custom" data-tiles="" data-lines="">Custom&hellip;</option>
+            </select>
+          </label>
           <label class="field small">
             <span>Box width (tiles)</span>
             <input id="boxWidthTiles" type="number" min="1" max="30" value="20" />
